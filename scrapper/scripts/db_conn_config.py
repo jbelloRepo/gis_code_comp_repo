@@ -5,16 +5,16 @@ import os
 def load_db_config():
     """Load database configuration from JSON file."""
     try:
-        config_path = os.path.join(os.path.dirname(__file__), "db_config.json")
+        config_path = os.path.join(os.path.dirname(__file__), "db_conn_config.json")
         with open(config_path, "r") as file:
             config = json.load(file)
         print("Database configuration loaded successfully")
         return config["database"]
     except FileNotFoundError:
-        print("Error: db_config.json file not found")
+        print("Error: db_conn_config.json file not found")
         raise
     except json.JSONDecodeError:
-        print("Error: Invalid JSON format in db_config.json")
+        print("Error: Invalid JSON format in db_conn_config.json")
         raise
     except KeyError:
         print("Error: 'database' key not found in config file")
