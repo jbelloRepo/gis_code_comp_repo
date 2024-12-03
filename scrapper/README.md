@@ -20,7 +20,3 @@ This service is designed to automatically collect and process Geographic Informa
 - Python 3.8 or higher
 - PostgreSQL 12 or higher
 - pip (Python package manager)
-
-## Installation
-
-1. Clone the repository:
