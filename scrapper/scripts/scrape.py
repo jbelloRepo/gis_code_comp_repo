@@ -101,6 +101,15 @@ def run_scraper() -> None:
                             f"Total records retrieved: {feature_count}\n"
                             f"Fields available: {list(data['features'][0]['attributes'].keys()) if feature_count > 0 else 'None'}"
                         )
+                        
+                        # Add this block to store the data
+                        try:
+                            logger.info(f"Storing {feature_count} records in database...")
+                            update_water_mains_data(city, dataset_type, data)
+                            logger.info("Database update completed successfully")
+                        except Exception as e:
+                            logger.error(f"Failed to store data in database: {str(e)}")
+                            sys.exit(1)
                     else:
                         logger.warning(
                             f"No features found for {city} {dataset_type}\n"
