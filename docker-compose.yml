@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgis:
+    build:
+      context: ./database
+      dockerfile: dockerfile
+    container_name: postgis-container
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_DB=gis_data
+      - POSTGRES_USER=gis_user
+      - POSTGRES_PASSWORD=password
+
+volumes:
+  postgis_data:
+    name: postgis_data
