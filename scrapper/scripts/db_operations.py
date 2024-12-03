@@ -1,5 +1,5 @@
 import psycopg2
-from DB_conn_config import get_db_connection
+from db_conn_config import get_db_connection
 
 def update_water_mains_data(city, dataset_type, data):
     connection = get_db_connection()
