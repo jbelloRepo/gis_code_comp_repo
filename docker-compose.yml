@@ -5,7 +5,7 @@ services:
     build:
       context: ./database
       dockerfile: dockerfile
-    container_name: postgis-container
+    container_name: postgis-db-service
     restart: always
     ports:
       - "5432:5432"
@@ -16,6 +16,28 @@ services:
       - POSTGRES_DB=gis_data
       - POSTGRES_USER=gis_user
       - POSTGRES_PASSWORD=password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gis_user -d gis_data"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  scraper:
+    build:
+      context: ./scrapper
+      dockerfile: dockerfile
+    container_name: python-scrapper-service
+    depends_on:
+      postgis:
+        condition: service_healthy
+    volumes:
+      - ./scrapper/logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+      - POSTGRES_DB=gis_data
+      - POSTGRES_USER=gis_user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST=postgis-db-service
 
 volumes:
   postgis_data:
