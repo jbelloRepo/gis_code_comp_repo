@@ -1,9 +1,9 @@
 {
     "database": {
-        "dbname": "your_database",
-        "user": "your_user",
-        "password": "your_password",
-        "host": "db",
+        "dbname": "gis_data",
+        "user": "gis_user",
+        "password": "password",
+        "host": "postgis",
         "port": "5432"
     }
 }
