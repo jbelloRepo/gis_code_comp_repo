@@ -1,5 +1,5 @@
 # gis_code_comp_repo
-Source code for BeSpatial Data Architecture and Coding Competition
+Source code for BeSpatial Data Architecture and Coding Competition (2025 submission)
 
 ## Description
 This repository implements a scalable GIS data processing system with multiple architectural layers for efficient data collection, storage, and retrieval.
