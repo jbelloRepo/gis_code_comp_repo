@@ -60,9 +60,15 @@ def update_water_mains_data(city, dataset_type, data):
                 )
                 VALUES (
                     %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                    CASE WHEN %s IS NOT NULL THEN to_timestamp(%s / 1000) ELSE NULL END,
+                    CASE WHEN %s IS NOT NULL 
+                         THEN timestamp 'epoch' + (%s/1000 * interval '1 second') 
+                         ELSE NULL 
+                    END,
                     %s,
-                    CASE WHEN %s IS NOT NULL THEN to_timestamp(%s / 1000) ELSE NULL END,
+                    CASE WHEN %s IS NOT NULL 
+                         THEN timestamp 'epoch' + (%s/1000 * interval '1 second') 
+                         ELSE NULL 
+                    END,
                     %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
                     ST_GeomFromGeoJSON(%s)
                 )
