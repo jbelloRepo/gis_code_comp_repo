@@ -14,34 +14,9 @@ def update_water_mains_data(city, dataset_type, data):
             attributes = feature.get("attributes", {})
             geometry = feature.get("geometry", {})
             
-            # Extract all fields from attributes
-            object_id = attributes.get('OBJECTID')
-            watmain_id = attributes.get('WATMAINID')
-            status = attributes.get('STATUS')
-            pressure_zone = attributes.get('PRESSURE_ZONE')
-            roadsegment_id = attributes.get('ROADSEGMENTID')
-            map_label = attributes.get('MAP_LABEL')
-            category = attributes.get('CATEGORY')
-            pipe_size = attributes.get('PIPE_SIZE')
-            material = attributes.get('MATERIAL')
-            lined = attributes.get('LINED')
+            # Extract timestamps
             lined_date = attributes.get('LINED_DATE')
-            lined_material = attributes.get('LINED_MATERIAL')
             installation_date = attributes.get('INSTALLATION_DATE')
-            acquisition = attributes.get('ACQUISITION')
-            consultant = attributes.get('CONSULTANT')
-            ownership = attributes.get('OWNERSHIP')
-            bridge_main = attributes.get('BRIDGE_MAIN')
-            bridge_details = attributes.get('BRIDGE_DETAILS')
-            criticality = attributes.get('CRITICALITY')
-            rel_cleaning_area = attributes.get('REL_CLEANING_AREA')
-            rel_cleaning_subarea = attributes.get('REL_CLEANING_SUBAREA')
-            undersized = attributes.get('UNDERSIZED')
-            shallow_main = attributes.get('SHALLOW_MAIN')
-            condition_score = attributes.get('CONDITION_SCORE')
-            oversized = attributes.get('OVERSIZED')
-            cleaned = attributes.get('CLEANED')
-            shape_length = attributes.get('Shape__Length')
 
             # Convert geometry paths to GeoJSON format
             geojson = {
@@ -60,15 +35,9 @@ def update_water_mains_data(city, dataset_type, data):
                 )
                 VALUES (
                     %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                    CASE WHEN %s IS NOT NULL 
-                         THEN timestamp 'epoch' + (%s/1000 * interval '1 second') 
-                         ELSE NULL 
-                    END,
+                    CASE WHEN %s IS NOT NULL THEN to_timestamp(%s::bigint/1000) ELSE NULL END,
                     %s,
-                    CASE WHEN %s IS NOT NULL 
-                         THEN timestamp 'epoch' + (%s/1000 * interval '1 second') 
-                         ELSE NULL 
-                    END,
+                    CASE WHEN %s IS NOT NULL THEN to_timestamp(%s::bigint/1000) ELSE NULL END,
                     %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
                     ST_GeomFromGeoJSON(%s)
                 )
@@ -101,13 +70,22 @@ def update_water_mains_data(city, dataset_type, data):
                     shape_length = EXCLUDED.shape_length,
                     geometry = EXCLUDED.geometry;
             """, (
-                city, dataset_type, object_id, watmain_id, status, pressure_zone,
-                roadsegment_id, map_label, category, pipe_size, material,
-                lined, lined_date, lined_date, lined_material, installation_date,
-                installation_date, acquisition, consultant, ownership, bridge_main,
-                bridge_details, criticality, rel_cleaning_area, rel_cleaning_subarea,
-                undersized, shallow_main, condition_score, oversized, cleaned,
-                shape_length, json.dumps(geojson)
+                city, dataset_type, attributes.get('OBJECTID'), attributes.get('WATMAINID'),
+                attributes.get('STATUS'), attributes.get('PRESSURE_ZONE'),
+                attributes.get('ROADSEGMENTID'), attributes.get('MAP_LABEL'),
+                attributes.get('CATEGORY'), attributes.get('PIPE_SIZE'),
+                attributes.get('MATERIAL'), attributes.get('LINED'),
+                lined_date, lined_date,
+                attributes.get('LINED_MATERIAL'),
+                installation_date, installation_date,
+                attributes.get('ACQUISITION'), attributes.get('CONSULTANT'),
+                attributes.get('OWNERSHIP'), attributes.get('BRIDGE_MAIN'),
+                attributes.get('BRIDGE_DETAILS'), attributes.get('CRITICALITY'),
+                attributes.get('REL_CLEANING_AREA'), attributes.get('REL_CLEANING_SUBAREA'),
+                attributes.get('UNDERSIZED'), attributes.get('SHALLOW_MAIN'),
+                attributes.get('CONDITION_SCORE'), attributes.get('OVERSIZED'),
+                attributes.get('CLEANED'), attributes.get('Shape__Length'),
+                json.dumps(geojson)
             ))
 
         connection.commit()
