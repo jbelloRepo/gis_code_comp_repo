@@ -71,6 +71,9 @@ This repository implements a scalable GIS data processing system with multiple a
 3. Submit a pull request
 
 ## License
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 <!-- Add license information here -->
 
 
